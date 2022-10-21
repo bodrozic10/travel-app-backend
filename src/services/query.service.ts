@@ -5,7 +5,6 @@ const findDocuments = async (
   params: Object = {}
 ) => {
   try {
-    console.log(params);
     const docs = await Model.find(params);
     return docs;
   } catch (error) {
