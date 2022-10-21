@@ -1,7 +1,5 @@
 import { findDocuments } from "../../src/services/query.service";
-import mongoose from "mongoose";
-
-const MockedModel = {} as mongoose.Model<any>;
+import { DB_MODEL_MOCK } from "../../src/const";
 
 describe("QueryService", () => {
   it("should be definded", () => {
@@ -12,14 +10,14 @@ describe("QueryService", () => {
     expect(typeof findDocuments).toBe("function");
   });
   it("Should return expected value", async () => {
-    MockedModel.find = jest
+    DB_MODEL_MOCK.find = jest
       .fn()
       .mockResolvedValue([{ name: "Nikola" }, { name: "Tesla" }]);
-    const result = await findDocuments(MockedModel);
+    const result = await findDocuments(DB_MODEL_MOCK);
     expect(result).toEqual([{ name: "Nikola" }, { name: "Tesla" }]);
   });
   it("Should throw error", async () => {
-    MockedModel.find = jest.fn().mockRejectedValue(new Error("Error"));
-    await expect(findDocuments(MockedModel)).rejects.toThrow("Error");
+    DB_MODEL_MOCK.find = jest.fn().mockRejectedValue(new Error("Error"));
+    await expect(findDocuments(DB_MODEL_MOCK)).rejects.toThrow("Error");
   });
 });

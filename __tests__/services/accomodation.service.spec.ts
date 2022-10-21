@@ -1,10 +1,8 @@
-import mongoose from "mongoose";
 import { findAccommodations } from "../../src/services/accommodation.service";
 import * as accommodationHelperService from "../../src/services/query.service";
+import { DB_MODEL_MOCK } from "../../src/const";
 
 jest.mock("../../src/services/query.service");
-
-const MockedModel = {} as mongoose.Model<any>;
 
 describe("AccommodationService", () => {
   describe("findaccommodations", () => {
@@ -23,21 +21,21 @@ describe("AccommodationService", () => {
       const findDocumentsMock = jest
         .spyOn(accommodationHelperService, "findDocuments")
         .mockImplementationOnce(() => Promise.resolve(mockedArray));
-      await findAccommodations(MockedModel);
+      await findAccommodations(DB_MODEL_MOCK);
       expect(findDocumentsMock).toHaveBeenCalledTimes(1);
     });
     it("Should return expected value", async () => {
       jest
         .spyOn(accommodationHelperService, "findDocuments")
         .mockImplementationOnce(() => Promise.resolve(mockedArray));
-      const result = await findAccommodations(MockedModel);
+      const result = await findAccommodations(DB_MODEL_MOCK);
       expect(result).toEqual(mockedArray);
     });
     it('Should throw error if "findDocuments" throws error', async () => {
       jest
         .spyOn(accommodationHelperService, "findDocuments")
         .mockImplementationOnce(() => Promise.reject(new Error("error")));
-      await expect(findAccommodations(MockedModel)).rejects.toThrowError(
+      await expect(findAccommodations(DB_MODEL_MOCK)).rejects.toThrowError(
         "error"
       );
     });
