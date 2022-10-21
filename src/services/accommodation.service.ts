@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { findDocuments } from "./";
+import { findDocuments } from "./query.service";
 import { IAccomodation } from "../models";
 
 const findAccommodations = async (

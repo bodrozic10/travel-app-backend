@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { Accommodation, IAccomodation } from "../models";
-import { findAccommodations } from "../services";
+import { findAccommodations } from "../services/accommodation.service";
 import { BAD_REQUEST, CREATED, OK, FAIL, SUCCESS } from "../const";
 
 const getAccommodations = async (req: Request, res: Response) => {

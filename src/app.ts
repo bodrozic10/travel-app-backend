@@ -1,6 +1,6 @@
 import express from "express";
 import morgan from "morgan";
-import { accommodationRouter } from "./routes";
+import accommodationRouter from "./routes/accommodationRoute";
 import { json } from "body-parser";
 
 const app = express();
