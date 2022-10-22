@@ -1,18 +1,21 @@
 import { Request, Response } from "express";
 import { Accommodation, IAccomodation } from "../models";
-import { findAccommodations } from "../services/accommodation.service";
+import {
+  findAccommodations,
+  createAccommodation as makeAccomodation,
+} from "../services/accommodation.service";
 import { BAD_REQUEST, CREATED, OK, FAIL, SUCCESS } from "../const";
 
 const getAccommodations = async (req: Request, res: Response) => {
   try {
     const data = await findAccommodations(Accommodation);
-    res.status(OK).json({
+    return res.status(OK).json({
       status: SUCCESS,
       length: data.length,
       data,
     });
   } catch (error) {
-    res.status(BAD_REQUEST).json({
+    return res.status(BAD_REQUEST).json({
       status: FAIL,
       message: error,
     });
@@ -25,7 +28,8 @@ const createAccommodation = async (
 ) => {
   try {
     const { location, name, price, profileImage, averageScore } = req.body;
-    const accommodation = await Accommodation.create({
+
+    const accommodation = await makeAccomodation(Accommodation, {
       averageScore,
       location,
       name,
@@ -33,12 +37,12 @@ const createAccommodation = async (
       profileImage,
     });
 
-    res.status(CREATED).json({
+    return res.status(CREATED).json({
       status: SUCCESS,
       accommodation,
     });
   } catch (error) {
-    res.status(BAD_REQUEST).json({
+    return res.status(BAD_REQUEST).json({
       status: FAIL,
       message: error,
     });

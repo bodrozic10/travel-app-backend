@@ -12,4 +12,14 @@ const findDocuments = async (
   }
 };
 
-export { findDocuments };
+const createDocument = async (
+  Model: mongoose.Model<any>,
+  params: Object = {}
+) => {
+  try {
+    return await Model.create(params);
+  } catch (error) {
+    throw error;
+  }
+};
+export { findDocuments, createDocument };
