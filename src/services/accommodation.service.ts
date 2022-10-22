@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { findDocuments } from "./query.service";
+import { findDocuments, createDocument } from "./helper.service";
 import { IAccomodation } from "../models";
 
 const findAccommodations = async (
@@ -13,4 +13,15 @@ const findAccommodations = async (
   }
 };
 
-export { findAccommodations };
+const createAccommodation = async (
+  Model: mongoose.Model<IAccomodation>,
+  params: Object = {}
+) => {
+  try {
+    return await createDocument(Model, params);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { findAccommodations, createAccommodation };
