@@ -1,5 +1,9 @@
 import { Request, Response } from "express";
-import { createUser as makeUser, findUsers } from "../services/user.service";
+import {
+  createUser as makeUser,
+  findUsers,
+  generateJWTToken,
+} from "../services/user.service";
 import { IUser } from "../interface/user";
 import { BAD_REQUEST, FAIL, OK, SUCCESS } from "../const";
 
@@ -45,10 +49,11 @@ const createUser = async (req: Request<{}, {}, IUser>, res: Response) => {
       username,
       passwordConfirm,
     });
+    const token = await generateJWTToken(newUser._id);
     res.status(OK).json({
       status: SUCCESS,
       data: {
-        newUser,
+        token,
       },
     });
   } catch (error) {
