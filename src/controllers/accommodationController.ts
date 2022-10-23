@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { IAccomodation } from "../models/accommodationModel";
+import { IAccomodation } from "../interface/accommodation";
 import {
   findAccommodations,
   createAccommodation as makeAccomodation,

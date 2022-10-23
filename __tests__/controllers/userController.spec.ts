@@ -1,7 +1,12 @@
 import { createUser, getUsers } from "../../src/controllers/userController";
 import { Request, Response } from "express";
 import * as userService from "../../src/services/user.service";
-import { BAD_REQUEST, MOCK_RETURN_VALUE_ARRAY, OK } from "../../src/const";
+import {
+  BAD_REQUEST,
+  MOCK_OBJECT,
+  MOCK_RETURN_VALUE_ARRAY,
+  OK,
+} from "../../src/const";
 
 jest.mock("../../src/services/user.service");
 
@@ -36,7 +41,9 @@ describe("userController.ts", () => {
       const { mReq, mRes } = mockReqAndRes();
       jest
         .spyOn(userService, "findUsers")
-        .mockImplementationOnce(() => Promise.resolve(MOCK_RETURN_VALUE_ARRAY));
+        .mockImplementationOnce(
+          () => Promise.resolve(MOCK_RETURN_VALUE_ARRAY) as Promise<any>
+        );
       await getUsers(mReq, mRes);
       expect(mRes.status).toBeCalledWith(OK);
     });
@@ -60,7 +67,9 @@ describe("userController.ts", () => {
       const { mReq, mRes } = mockReqAndRes();
       jest
         .spyOn(userService, "createUser")
-        .mockImplementationOnce(() => Promise.resolve([]));
+        .mockImplementationOnce(
+          () => Promise.resolve(MOCK_OBJECT) as Promise<any>
+        );
       await createUser(mReq, mRes);
       expect(userService.createUser).toBeCalledTimes(1);
     });
@@ -68,7 +77,9 @@ describe("userController.ts", () => {
       const { mReq, mRes } = mockReqAndRes();
       jest
         .spyOn(userService, "createUser")
-        .mockImplementationOnce(() => Promise.resolve("user"));
+        .mockImplementationOnce(
+          () => Promise.resolve(MOCK_OBJECT) as Promise<any>
+        );
       await createUser(mReq, mRes);
       expect(mRes.status).toBeCalledWith(OK);
     });

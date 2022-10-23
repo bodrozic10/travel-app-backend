@@ -1,19 +1,7 @@
 import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcrypt";
-import { selectFields } from "../services/helper.service";
-
-export interface IUser {
-  email: string;
-  password: string;
-  passwordChangedAt: Date;
-  passwordResetToken: string;
-  passwordConfirm: string | undefined;
-  name: string;
-  createdAt: Date;
-  username: string;
-  image: string;
-}
+import { IUser } from "../interface/user";
 
 const userSchema = new mongoose.Schema<IUser>(
   {
@@ -59,11 +47,6 @@ const userSchema = new mongoose.Schema<IUser>(
 userSchema.pre("save", async function (next) {
   this.passwordConfirm = undefined;
   this.password = await bcrypt.hash(this.password, 12);
-  next();
-});
-
-userSchema.pre("find", async function (next) {
-  selectFields(this, ["-__v", "-password"]);
   next();
 });
 

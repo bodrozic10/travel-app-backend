@@ -1,13 +1,5 @@
 import mongoose from "mongoose";
-import { selectFields } from "../services/helper.service";
-
-export interface IAccomodation {
-  name: string;
-  profileImage: string;
-  location: string;
-  price: number;
-  averageScore?: number;
-}
+import { IAccomodation } from "../interface/accommodation";
 
 const accommodationSchema = new mongoose.Schema<IAccomodation>({
   name: {
@@ -31,11 +23,6 @@ const accommodationSchema = new mongoose.Schema<IAccomodation>({
     type: Number,
     default: 4.5,
   },
-});
-
-accommodationSchema.pre("find", function (next) {
-  selectFields(this, ["-__v"]);
-  next();
 });
 
 export const Accommodation = mongoose.model(
