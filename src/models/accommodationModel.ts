@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { selectFields } from "../services/helper.service";
 
 export interface IAccomodation {
   name: string;
@@ -30,6 +31,11 @@ const accommodationSchema = new mongoose.Schema<IAccomodation>({
     type: Number,
     default: 4.5,
   },
+});
+
+accommodationSchema.pre("find", function (next) {
+  selectFields(this, ["-__v"]);
+  next();
 });
 
 export const Accommodation = mongoose.model(

@@ -22,4 +22,12 @@ const createDocument = async (
     throw error;
   }
 };
-export { findDocuments, createDocument };
+
+const selectFields = async (
+  query: mongoose.Query<any, any, {}, any>,
+  fields: string[]
+) => {
+  query.select(fields.join(" "));
+};
+
+export { findDocuments, createDocument, selectFields };

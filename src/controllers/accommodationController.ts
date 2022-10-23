@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Accommodation, IAccomodation } from "../models";
+import { IAccomodation } from "../models/accommodationModel";
 import {
   findAccommodations,
   createAccommodation as makeAccomodation,
@@ -8,7 +8,7 @@ import { BAD_REQUEST, CREATED, OK, FAIL, SUCCESS } from "../const";
 
 const getAccommodations = async (req: Request, res: Response) => {
   try {
-    const data = await findAccommodations(Accommodation);
+    const data = await findAccommodations();
     return res.status(OK).json({
       status: SUCCESS,
       length: data.length,
@@ -29,7 +29,7 @@ const createAccommodation = async (
   try {
     const { location, name, price, profileImage, averageScore } = req.body;
 
-    const accommodation = await makeAccomodation(Accommodation, {
+    const accommodation = await makeAccomodation({
       averageScore,
       location,
       name,

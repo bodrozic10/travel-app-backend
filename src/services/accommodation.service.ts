@@ -1,24 +1,17 @@
-import mongoose from "mongoose";
 import { findDocuments, createDocument } from "./helper.service";
-import { IAccomodation } from "../models";
+import { IAccomodation, Accommodation } from "../models/accommodationModel";
 
-const findAccommodations = async (
-  Model: mongoose.Model<IAccomodation>,
-  params: Object = {}
-) => {
+const findAccommodations = async (params = {} as Partial<IAccomodation>) => {
   try {
-    return await findDocuments(Model, params);
+    return await findDocuments(Accommodation, params);
   } catch (error) {
     throw error;
   }
 };
 
-const createAccommodation = async (
-  Model: mongoose.Model<IAccomodation>,
-  params: Object = {}
-) => {
+const createAccommodation = async (params = {} as Partial<IAccomodation>) => {
   try {
-    return await createDocument(Model, params);
+    return await createDocument(Accommodation, params);
   } catch (error) {
     throw error;
   }
