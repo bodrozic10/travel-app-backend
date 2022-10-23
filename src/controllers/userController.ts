@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { createUser as makeUser, findUsers } from "../services/user.service";
-import { IUser } from "../models/userModel";
+import { IUser } from "../interface/user";
 import { BAD_REQUEST, FAIL, OK, SUCCESS } from "../const";
 
 const getUsers = async (req: Request, res: Response) => {

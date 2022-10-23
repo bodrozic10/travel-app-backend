@@ -9,6 +9,7 @@ import {
   CREATED,
   SUCCESS,
   MOCK_RETURN_VALUE_ARRAY,
+  MOCK_OBJECT,
 } from "../../src/const";
 
 jest.mock("../../src/services/accommodation.service");
@@ -36,7 +37,9 @@ describe("accommodationController.ts", () => {
       const { mReq, mRes } = mockReqAndRes();
       jest
         .spyOn(accommodationService, "findAccommodations")
-        .mockImplementationOnce(() => Promise.resolve(MOCK_RETURN_VALUE_ARRAY));
+        .mockImplementationOnce(
+          () => Promise.resolve(MOCK_RETURN_VALUE_ARRAY) as Promise<any>
+        );
       await getAccommodations(mReq, mRes);
       expect(accommodationService.findAccommodations).toBeCalledTimes(1);
     });
@@ -44,7 +47,9 @@ describe("accommodationController.ts", () => {
       const { mReq, mRes } = mockReqAndRes();
       jest
         .spyOn(accommodationService, "findAccommodations")
-        .mockImplementationOnce(() => Promise.resolve(MOCK_RETURN_VALUE_ARRAY));
+        .mockImplementationOnce(
+          () => Promise.resolve(MOCK_RETURN_VALUE_ARRAY) as Promise<any>
+        );
       await getAccommodations(mReq, mRes);
       expect(mRes.json).toBeCalledWith({
         status: SUCCESS,
@@ -72,7 +77,9 @@ describe("accommodationController.ts", () => {
       const { mReq, mRes } = mockReqAndRes();
       jest
         .spyOn(accommodationService, "createAccommodation")
-        .mockImplementationOnce(() => Promise.resolve({}));
+        .mockImplementationOnce(
+          () => Promise.resolve(MOCK_OBJECT) as Promise<any>
+        );
       await createAccommodation(mReq, mRes);
       expect(accommodationService.createAccommodation).toBeCalledTimes(1);
     });
@@ -80,7 +87,9 @@ describe("accommodationController.ts", () => {
       const { mReq, mRes } = mockReqAndRes();
       jest
         .spyOn(accommodationService, "createAccommodation")
-        .mockImplementationOnce(() => Promise.resolve({}));
+        .mockImplementationOnce(
+          () => Promise.resolve(MOCK_OBJECT) as Promise<any>
+        );
       await createAccommodation(mReq, mRes);
       expect(mRes.status).toHaveBeenCalledWith(CREATED);
     });

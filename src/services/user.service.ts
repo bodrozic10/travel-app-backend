@@ -1,9 +1,9 @@
-import { IUser, User } from "../models/userModel";
-import { createDocument, findDocuments } from "./helper.service";
+import { User } from "../models/userModel";
+import { IUser } from "../interface/user";
 
-const createUser = async (params = {} as Partial<IUser>) => {
+const createUser = async (params: IUser) => {
   try {
-    return await createDocument(User, params);
+    return await User.create(params);
   } catch (error) {
     throw error;
   }
@@ -11,7 +11,7 @@ const createUser = async (params = {} as Partial<IUser>) => {
 
 const findUsers = async (params = {} as Partial<IUser>) => {
   try {
-    return await findDocuments(User, params);
+    return await User.find(params);
   } catch (error) {
     throw error;
   }
