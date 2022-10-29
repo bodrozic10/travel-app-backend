@@ -9,3 +9,8 @@ export interface IUser {
   username: string;
   image: string;
 }
+
+export interface IUserCredentials {
+  email: string;
+  password: string;
+}

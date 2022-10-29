@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import {
-  createUser as makeUser,
+  createUser,
   findUsers,
   generateJWTToken,
+  loginUser,
 } from "../services/user.service";
-import { IUser } from "../interface/user";
+import { IUser, IUserCredentials } from "../interface/user";
 import { BAD_REQUEST, FAIL, OK, SUCCESS } from "../const";
 
 const getUsers = async (req: Request, res: Response) => {
@@ -25,7 +26,7 @@ const getUsers = async (req: Request, res: Response) => {
   }
 };
 
-const createUser = async (req: Request<{}, {}, IUser>, res: Response) => {
+const signup = async (req: Request<{}, {}, IUser>, res: Response) => {
   try {
     const {
       email,
@@ -38,7 +39,7 @@ const createUser = async (req: Request<{}, {}, IUser>, res: Response) => {
       username,
       passwordConfirm,
     } = req.body;
-    const newUser = await makeUser({
+    const newUser = await createUser({
       email,
       password,
       createdAt,
@@ -64,4 +65,22 @@ const createUser = async (req: Request<{}, {}, IUser>, res: Response) => {
   }
 };
 
-export { getUsers, createUser };
+const login = async (req: Request<{}, {}, IUserCredentials>, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    const token = await loginUser({ email, password });
+    res.status(OK).json({
+      status: SUCCESS,
+      data: {
+        token,
+      },
+    });
+  } catch (error) {
+    res.status(BAD_REQUEST).json({
+      status: FAIL,
+      message: error,
+    });
+  }
+};
+
+export { getUsers, signup, login };

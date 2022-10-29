@@ -1,16 +1,23 @@
 import {
   createUser,
   findUsers,
-  generateJWTToken,
+  loginUser,
 } from "../../src/services/user.service";
+import * as userHelperService from "../../src/services/user.helper.service";
 import { User } from "../../src/models/userModel";
 import { IUser } from "../../src/interface/user";
-import { MOCK_RETURN_VALUE_ARRAY, MOCK_OBJECT } from "../../src/const";
-import jwt from "jsonwebtoken";
+import {
+  MOCK_RETURN_VALUE_ARRAY,
+  MOCK_OBJECT,
+  USER_CREDENTIALS,
+} from "../../src/const";
 
-jest.mock("jsonwebtoken");
+jest.mock("../../src/services/user.helper.service");
 
 describe("userService", () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
   describe("findUsers", () => {
     it("should be defined", () => {
       expect(findUsers).toBeDefined();
@@ -51,22 +58,43 @@ describe("userService", () => {
       await expect(createUser({} as IUser)).rejects.toThrow("Error");
     });
   });
-  describe("generateJWTToken", () => {
+  describe("loginUser", () => {
     it("should be defined", () => {
-      expect(generateJWTToken).toBeDefined();
+      expect(loginUser).toBeDefined();
     });
     it("should be function", () => {
-      expect(typeof generateJWTToken).toBe("function");
+      expect(typeof loginUser).toBe("function");
     });
-    it("should return a string", async () => {
-      jwt.sign = jest.fn().mockImplementationOnce(() => "token");
-      expect(await generateJWTToken("id")).toEqual("token");
+    it("should throw an error if credentials are not provided", async () => {
+      await expect(loginUser({ email: "", password: "" })).rejects.toThrow(
+        new Error("Please provide email and password")
+      );
     });
-    it("should throw an error", async () => {
-      jwt.sign = jest
-        .fn()
-        .mockImplementationOnce(() => Promise.reject(new Error("Error")));
-      await expect(generateJWTToken("")).rejects.toThrow("Error");
+    it("should throw an error if credentials are not provided", async () => {
+      await expect(loginUser({ email: "", password: "" })).rejects.toThrow(
+        new Error("Please provide email and password")
+      );
+    });
+    it("should throw an error if user is not found", async () => {
+      User.findOne = jest.fn().mockImplementationOnce(() => ({
+        select: jest.fn().mockResolvedValueOnce(null),
+      }));
+      await expect(loginUser(USER_CREDENTIALS)).rejects.toThrow(
+        new Error("Incorrect email or password")
+      );
+    });
+    it("should return token", async () => {
+      User.findOne = jest.fn().mockImplementationOnce(() => ({
+        select: jest.fn().mockResolvedValueOnce(MOCK_OBJECT),
+      }));
+      jest
+        .spyOn(userHelperService, "generateJWTToken")
+        .mockImplementationOnce(() => Promise.resolve("token"));
+      jest
+        .spyOn(userHelperService, "comparePassword")
+        .mockImplementationOnce(() => Promise.resolve(true));
+      const response = await loginUser(USER_CREDENTIALS);
+      expect(response).toEqual("token");
     });
   });
 });

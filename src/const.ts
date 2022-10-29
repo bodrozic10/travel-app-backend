@@ -13,3 +13,7 @@ export const FAIL = "fail";
 // MOCKS
 export const MOCK_RETURN_VALUE_ARRAY = [{ name: "Nikola" }, { name: "Mike" }];
 export const MOCK_OBJECT = {};
+export const USER_CREDENTIALS = {
+  email: "email@example.com",
+  password: "password",
+};
