@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema<IUser>(
       type: String,
       required: [true, "Please provide a password"],
       minlength: 8,
+      select: false,
     },
     passwordChangedAt: Date,
     passwordResetToken: String,
@@ -47,6 +48,11 @@ const userSchema = new mongoose.Schema<IUser>(
 userSchema.pre("save", async function (next) {
   this.passwordConfirm = undefined;
   this.password = await bcrypt.hash(this.password, 12);
+  next();
+});
+
+userSchema.pre(/^find/, function (this: mongoose.Query<{}, IUser>, next) {
+  this.select("-__v");
   next();
 });
 
