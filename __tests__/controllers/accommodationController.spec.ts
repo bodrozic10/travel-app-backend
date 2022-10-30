@@ -2,7 +2,6 @@ import {
   getAccommodations,
   createAccommodation,
 } from "../../src/controllers/accommodationController";
-import { Request, Response } from "express";
 import * as accommodationService from "../../src/services/accommodation.service";
 import {
   BAD_REQUEST,
@@ -10,17 +9,10 @@ import {
   SUCCESS,
   MOCK_RETURN_VALUE_ARRAY,
   MOCK_OBJECT,
+  mockReqAndRes,
 } from "../../src/const";
 
 jest.mock("../../src/services/accommodation.service");
-
-const mockReqAndRes = () => ({
-  mReq: { body: {} } as Request,
-  mRes: {
-    status: jest.fn().mockReturnThis(),
-    json: jest.fn().mockReturnThis(),
-  } as unknown as Response,
-});
 
 describe("accommodationController.ts", () => {
   beforeEach(() => {
