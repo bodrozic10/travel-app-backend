@@ -10,4 +10,15 @@ const generateJWTToken = async (id: Object) => {
   }
 };
 
-export { generateJWTToken };
+const verifyJWTToken = async (token: string) => {
+  try {
+    return jwt.verify(
+      token as string,
+      process.env.JWT_SECRET as string
+    ) as jwt.JwtPayload;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { generateJWTToken, verifyJWTToken };
