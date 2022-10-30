@@ -19,9 +19,10 @@ export const USER_CREDENTIALS = {
 };
 
 export const mockReqAndRes = () => ({
-  mReq: { body: {} } as unknown as Request,
+  mReq: { body: {}, headers: { authorization: "token" } } as unknown as Request,
   mRes: {
     status: jest.fn().mockReturnThis(),
     json: jest.fn().mockReturnThis(),
   } as unknown as Response,
+  next: jest.fn(),
 });

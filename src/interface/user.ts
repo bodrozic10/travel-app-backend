@@ -17,4 +17,5 @@ export interface IUserCredentials {
 
 export interface IUserMethods {
   comparePassword: (password: string, hashPassword: string) => Promise<boolean>;
+  changedPasswordAfter: (JWTTimestamp: number) => boolean;
 }
