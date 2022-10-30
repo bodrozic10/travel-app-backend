@@ -14,3 +14,7 @@ export interface IUserCredentials {
   email: string;
   password: string;
 }
+
+export interface IUserMethods {
+  comparePassword: (password: string, hashPassword: string) => Promise<boolean>;
+}

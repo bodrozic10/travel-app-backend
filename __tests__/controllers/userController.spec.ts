@@ -1,22 +1,13 @@
-import { signup, getUsers, login } from "../../src/controllers/userController";
-import { Request, Response } from "express";
+import { getUsers } from "../../src/controllers/userController";
 import * as userService from "../../src/services/user.service";
 import {
   BAD_REQUEST,
-  MOCK_OBJECT,
   MOCK_RETURN_VALUE_ARRAY,
   OK,
+  mockReqAndRes,
 } from "../../src/const";
 
 jest.mock("../../src/services/user.service");
-
-const mockReqAndRes = () => ({
-  mReq: { body: {} } as Request,
-  mRes: {
-    status: jest.fn().mockReturnThis(),
-    json: jest.fn().mockReturnThis(),
-  } as unknown as Response,
-});
 
 describe("userController.ts", () => {
   beforeEach(() => {
@@ -53,88 +44,6 @@ describe("userController.ts", () => {
         .spyOn(userService, "findUsers")
         .mockImplementationOnce(() => Promise.reject("error"));
       await getUsers(mReq, mRes);
-      expect(mRes.status).toBeCalledWith(BAD_REQUEST);
-    });
-  });
-  describe("signup", () => {
-    it("Should be defined", () => {
-      expect(signup).toBeDefined();
-    });
-    it("Should be a function", () => {
-      expect(typeof signup).toBe("function");
-    });
-    it("should call createUser and generateJWTToken once", async () => {
-      const { mReq, mRes } = mockReqAndRes();
-      jest
-        .spyOn(userService, "generateJWTToken")
-        .mockImplementationOnce(() => Promise.resolve("token"));
-      jest
-        .spyOn(userService, "createUser")
-        .mockImplementationOnce(
-          () => Promise.resolve(MOCK_OBJECT) as Promise<any>
-        );
-      await signup(mReq, mRes);
-      expect(userService.createUser).toBeCalledTimes(1);
-      expect(userService.generateJWTToken).toBeCalledTimes(1);
-    });
-    it("should call with status 200", async () => {
-      const { mReq, mRes } = mockReqAndRes();
-      jest
-        .spyOn(userService, "generateJWTToken")
-        .mockImplementationOnce(() => Promise.resolve("token"));
-      jest
-        .spyOn(userService, "createUser")
-        .mockImplementationOnce(
-          () => Promise.resolve(MOCK_OBJECT) as Promise<any>
-        );
-      await signup(mReq, mRes);
-      expect(mRes.status).toBeCalledWith(OK);
-    });
-    it("should call with status 404", async () => {
-      const { mReq, mRes } = mockReqAndRes();
-      jest
-        .spyOn(userService, "generateJWTToken")
-        .mockImplementationOnce(() => Promise.resolve("token"));
-      jest
-        .spyOn(userService, "createUser")
-        .mockImplementationOnce(() => Promise.reject("error"));
-      await signup(mReq, mRes);
-      expect(mRes.status).toBeCalledWith(BAD_REQUEST);
-    });
-  });
-  describe("login", () => {
-    it("Should be defined", () => {
-      expect(login).toBeDefined();
-    });
-    it("Should be a function", () => {
-      expect(typeof login).toBe("function");
-    });
-    it("should call loginUser once", async () => {
-      const { mReq, mRes } = mockReqAndRes();
-      jest
-        .spyOn(userService, "loginUser")
-        .mockImplementationOnce(
-          () => Promise.resolve(MOCK_OBJECT) as Promise<any>
-        );
-      await login(mReq, mRes);
-      expect(userService.loginUser).toBeCalledTimes(1);
-    });
-    it("should call with status 200", async () => {
-      const { mReq, mRes } = mockReqAndRes();
-      jest
-        .spyOn(userService, "loginUser")
-        .mockImplementationOnce(
-          () => Promise.resolve(MOCK_OBJECT) as Promise<any>
-        );
-      await login(mReq, mRes);
-      expect(mRes.status).toBeCalledWith(OK);
-    });
-    it("should call with status 404", async () => {
-      const { mReq, mRes } = mockReqAndRes();
-      jest
-        .spyOn(userService, "loginUser")
-        .mockImplementationOnce(() => Promise.reject("error"));
-      await login(mReq, mRes);
       expect(mRes.status).toBeCalledWith(BAD_REQUEST);
     });
   });

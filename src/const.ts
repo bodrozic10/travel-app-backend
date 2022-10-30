@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import { Request, Response } from "express";
 
 // statuscode
 export const OK = 200;
@@ -17,3 +17,11 @@ export const USER_CREDENTIALS = {
   email: "email@example.com",
   password: "password",
 };
+
+export const mockReqAndRes = () => ({
+  mReq: { body: {} } as unknown as Request,
+  mRes: {
+    status: jest.fn().mockReturnThis(),
+    json: jest.fn().mockReturnThis(),
+  } as unknown as Response,
+});

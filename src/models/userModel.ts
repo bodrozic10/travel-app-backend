@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcrypt";
-import { IUser } from "../interface/user";
+import { IUser, IUserMethods } from "../interface/user";
 
-const userSchema = new mongoose.Schema<IUser>(
+const userSchema = new mongoose.Schema<IUser, {}, IUserMethods>(
   {
     name: {
       type: String,
@@ -44,6 +44,17 @@ const userSchema = new mongoose.Schema<IUser>(
     toObject: { virtuals: true },
   }
 );
+
+userSchema.methods.comparePassword = async function (
+  password: string,
+  hashPassword: string
+) {
+  try {
+    return await bcrypt.compare(password, hashPassword);
+  } catch (error) {
+    throw error;
+  }
+};
 
 userSchema.pre("save", async function (next) {
   this.passwordConfirm = undefined;
