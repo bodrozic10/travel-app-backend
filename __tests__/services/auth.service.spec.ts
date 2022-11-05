@@ -57,6 +57,17 @@ describe("authService", () => {
         new Error("Incorrect email or password")
       );
     });
+    it("should return token", async () => {
+      User.findOne = jest.fn().mockImplementationOnce(() => ({
+        select: jest.fn().mockImplementationOnce(() => ({
+          comparePassword: jest.fn().mockResolvedValueOnce(true),
+        })),
+      }));
+      jest
+        .spyOn(authHelperService, "generateJWTToken")
+        .mockImplementationOnce(() => Promise.resolve("token"));
+      expect(await loginUser(USER_CREDENTIALS)).toEqual("token");
+    });
   });
   describe("protectRoute", () => {
     it("should be defined", () => {
