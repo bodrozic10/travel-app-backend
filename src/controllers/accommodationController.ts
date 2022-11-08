@@ -27,24 +27,43 @@ const createAccommodation = async (
   res: Response
 ) => {
   try {
-    const { location, name, price, profileImage, averageScore } = req.body;
+    const {
+      accommodationType,
+      amenities,
+      description,
+      images,
+      location,
+      maxGuests,
+      name,
+      numBaths,
+      numBeds,
+      price,
+      averageScore,
+    } = req.body;
 
     const accommodation = await makeAccomodation({
-      averageScore,
+      accommodationType,
+      amenities,
+      description,
+      host: req.currentUser.id,
+      images,
       location,
+      maxGuests,
       name,
+      numBaths,
+      numBeds,
       price,
-      profileImage,
+      averageScore,
     });
 
     return res.status(CREATED).json({
       status: SUCCESS,
       accommodation,
     });
-  } catch (error) {
+  } catch (error: any) {
     return res.status(BAD_REQUEST).json({
       status: FAIL,
-      message: error,
+      message: error.message,
     });
   }
 };
