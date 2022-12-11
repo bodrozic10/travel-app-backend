@@ -1,30 +1,33 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { IAccomodation } from "../interface/accommodation";
 import {
   findAccommodations,
   createAccommodation as makeAccomodation,
 } from "../services/accommodation.service";
-import { BAD_REQUEST, CREATED, OK, FAIL, SUCCESS } from "../const";
+import { BAD_REQUEST, CREATED, OK, SUCCESS } from "../const";
+import AppError from "../utils/AppError";
 
-const getAccommodations = async (req: Request, res: Response) => {
+const getAccommodations = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const data = await findAccommodations();
-    return res.status(OK).json({
+    res.status(OK).json({
       status: SUCCESS,
       length: data.length,
       data,
     });
-  } catch (error) {
-    return res.status(BAD_REQUEST).json({
-      status: FAIL,
-      message: error,
-    });
+  } catch (error: any) {
+    return next(new AppError(error, BAD_REQUEST));
   }
 };
 
 const createAccommodation = async (
   req: Request<{}, {}, IAccomodation, {}>,
-  res: Response
+  res: Response,
+  next: NextFunction
 ) => {
   try {
     const {
@@ -61,10 +64,7 @@ const createAccommodation = async (
       accommodation,
     });
   } catch (error: any) {
-    return res.status(BAD_REQUEST).json({
-      status: FAIL,
-      message: error.message,
-    });
+    return next(new AppError(error, BAD_REQUEST));
   }
 };
 

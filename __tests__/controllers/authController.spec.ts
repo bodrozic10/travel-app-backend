@@ -9,6 +9,7 @@ describe("userController", () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
+  const { mReq, mRes, next } = mockReqAndRes();
   describe("signup", () => {
     it("Should be defined", () => {
       expect(signup).toBeDefined();
@@ -17,32 +18,29 @@ describe("userController", () => {
       expect(typeof signup).toBe("function");
     });
     it("should call createUser once", async () => {
-      const { mReq, mRes } = mockReqAndRes();
       jest
         .spyOn(authService, "signupUser")
         .mockImplementationOnce(
           () => Promise.resolve(MOCK_OBJECT) as Promise<any>
         );
-      await signup(mReq, mRes);
+      await signup(mReq, mRes, next);
       expect(authService.signupUser).toBeCalledTimes(1);
     });
     it("should call with status 200", async () => {
-      const { mReq, mRes } = mockReqAndRes();
       jest
         .spyOn(authService, "signupUser")
         .mockImplementationOnce(
           () => Promise.resolve(MOCK_OBJECT) as Promise<any>
         );
-      await signup(mReq, mRes);
+      await signup(mReq, mRes, next);
       expect(mRes.status).toBeCalledWith(OK);
     });
-    it("should call with status 404", async () => {
-      const { mReq, mRes } = mockReqAndRes();
+    it("should next if fails", async () => {
       jest
         .spyOn(authService, "signupUser")
         .mockImplementationOnce(() => Promise.reject("error"));
-      await signup(mReq, mRes);
-      expect(mRes.status).toBeCalledWith(BAD_REQUEST);
+      await signup(mReq, mRes, next);
+      expect(next).toHaveBeenCalled();
     });
   });
   describe("login", () => {
@@ -53,32 +51,29 @@ describe("userController", () => {
       expect(typeof login).toBe("function");
     });
     it("should call loginUser once", async () => {
-      const { mReq, mRes } = mockReqAndRes();
       jest
         .spyOn(authService, "loginUser")
         .mockImplementationOnce(
           () => Promise.resolve(MOCK_OBJECT) as Promise<any>
         );
-      await login(mReq, mRes);
+      await login(mReq, mRes, next);
       expect(authService.loginUser).toBeCalledTimes(1);
     });
     it("should call with status 200", async () => {
-      const { mReq, mRes } = mockReqAndRes();
       jest
         .spyOn(authService, "loginUser")
         .mockImplementationOnce(
           () => Promise.resolve(MOCK_OBJECT) as Promise<any>
         );
-      await login(mReq, mRes);
+      await login(mReq, mRes, next);
       expect(mRes.status).toBeCalledWith(OK);
     });
-    it("should call with status 404", async () => {
-      const { mReq, mRes } = mockReqAndRes();
+    it("should call next if fails", async () => {
       jest
         .spyOn(authService, "loginUser")
         .mockImplementationOnce(() => Promise.reject("error"));
-      await login(mReq, mRes);
-      expect(mRes.status).toBeCalledWith(BAD_REQUEST);
+      await login(mReq, mRes, next);
+      expect(next).toHaveBeenCalled();
     });
   });
   describe("protect", () => {
@@ -89,7 +84,6 @@ describe("userController", () => {
       expect(typeof protect).toBe("function");
     });
     it("should call protect once", async () => {
-      const { mReq, mRes, next } = mockReqAndRes();
       jest
         .spyOn(authService, "protectRoute")
         .mockImplementationOnce(
@@ -99,7 +93,6 @@ describe("userController", () => {
       expect(authService.protectRoute).toBeCalledTimes(1);
     });
     it("should call next", async () => {
-      const { mReq, mRes, next } = mockReqAndRes();
       jest
         .spyOn(authService, "protectRoute")
         .mockImplementationOnce(
@@ -108,13 +101,12 @@ describe("userController", () => {
       await protect(mReq, mRes, next);
       expect(next).toBeCalledTimes(1);
     });
-    it("should call with status 404", async () => {
-      const { mReq, mRes, next } = mockReqAndRes();
+    it("should call if fails", async () => {
       jest
         .spyOn(authService, "protectRoute")
         .mockImplementationOnce(() => Promise.reject("error"));
       await protect(mReq, mRes, next);
-      expect(mRes.status).toBeCalledWith(BAD_REQUEST);
+      expect(next).toHaveBeenCalled();
     });
   });
 });

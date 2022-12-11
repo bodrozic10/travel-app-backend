@@ -1,8 +1,9 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { findUsers, deleteUser, updateUser } from "../services/user.service";
 import { BAD_REQUEST, FAIL, OK, SUCCESS } from "../const";
+import AppError from "../utils/AppError";
 
-const getUsers = async (req: Request, res: Response) => {
+const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const users = await findUsers();
     res.status(OK).json({
@@ -12,30 +13,24 @@ const getUsers = async (req: Request, res: Response) => {
         users,
       },
     });
-  } catch (error) {
-    res.status(BAD_REQUEST).json({
-      status: FAIL,
-      message: error,
-    });
+  } catch (error: any) {
+    return next(new AppError(error, BAD_REQUEST));
   }
 };
 
-const removeUser = async (req: Request, res: Response) => {
+const removeUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await deleteUser(req.params.id);
     res.status(OK).json({
       status: SUCCESS,
       data: null,
     });
-  } catch (error) {
-    res.status(BAD_REQUEST).json({
-      status: FAIL,
-      message: error,
-    });
+  } catch (error: any) {
+    return next(new AppError(error, BAD_REQUEST));
   }
 };
 
-const updateMe = async (req: Request, res: Response) => {
+const updateMe = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, username, image } = req.body;
     const updatedUser = await updateUser(req.currentUser.id, {
@@ -49,11 +44,8 @@ const updateMe = async (req: Request, res: Response) => {
         user: updatedUser,
       },
     });
-  } catch (error) {
-    res.status(BAD_REQUEST).json({
-      status: FAIL,
-      message: error,
-    });
+  } catch (error: any) {
+    return next(new AppError(error, BAD_REQUEST));
   }
 };
 
