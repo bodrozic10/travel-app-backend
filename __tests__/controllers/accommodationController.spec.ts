@@ -1,6 +1,7 @@
 import {
   getAccommodations,
   createAccommodation,
+  getAccommodation,
 } from "../../src/controllers/accommodationController";
 import * as accommodationService from "../../src/services/accommodation.service";
 import {
@@ -81,6 +82,39 @@ describe("accommodationController.ts", () => {
         .spyOn(accommodationService, "createAccommodation")
         .mockImplementationOnce(() => Promise.reject(new Error("error")));
       await createAccommodation(mReq, mRes, next);
+      expect(next).toHaveBeenCalled();
+    });
+  });
+  describe("getAccommodation", () => {
+    it("Should be defined", () => {
+      expect(getAccommodation).toBeDefined();
+    });
+    it("Should be a function", () => {
+      expect(typeof getAccommodation).toBe("function");
+    });
+    it("should call getAccommodation once", async () => {
+      jest
+        .spyOn(accommodationService, "findAccommodation")
+        .mockImplementationOnce(
+          () => Promise.resolve(MOCK_OBJECT) as Promise<any>
+        );
+      await getAccommodation(mReq, mRes, next);
+      expect(accommodationService.findAccommodation).toBeCalledTimes(1);
+    });
+    it("should return status 200", async () => {
+      jest
+        .spyOn(accommodationService, "findAccommodation")
+        .mockImplementationOnce(
+          () => Promise.resolve(MOCK_OBJECT) as Promise<any>
+        );
+      await getAccommodation(mReq, mRes, next);
+      expect(mRes.status).toHaveBeenCalledWith(OK);
+    });
+    it("should call next if fails", async () => {
+      jest
+        .spyOn(accommodationService, "findAccommodation")
+        .mockImplementationOnce(() => Promise.reject(new Error("error")));
+      await getAccommodation(mReq, mRes, next);
       expect(next).toHaveBeenCalled();
     });
   });
