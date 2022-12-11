@@ -27,4 +27,20 @@ const findAccommodation = async (id: string) => {
   }
 };
 
-export { findAccommodations, createAccommodation, findAccommodation };
+const searchSuggestions = async (name: string) => {
+  try {
+    const regex = new RegExp(name as string, "i");
+    return await Accommodation.find({
+      name: { $regex: regex },
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export {
+  findAccommodations,
+  createAccommodation,
+  findAccommodation,
+  searchSuggestions,
+};

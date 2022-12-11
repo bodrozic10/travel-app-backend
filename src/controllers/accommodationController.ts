@@ -4,6 +4,7 @@ import {
   findAccommodations,
   createAccommodation as makeAccomodation,
   findAccommodation,
+  searchSuggestions as searchSuggestionsService,
 } from "../services/accommodation.service";
 import { BAD_REQUEST, CREATED, OK, SUCCESS } from "../const";
 import AppError from "../utils/AppError";
@@ -87,4 +88,30 @@ const getAccommodation = async (
   }
 };
 
-export { getAccommodations, createAccommodation, getAccommodation };
+const searchSuggestions = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const accommodations = await searchSuggestionsService(
+      req.query.name as string
+    );
+    res.status(OK).json({
+      status: SUCCESS,
+      length: accommodations.length,
+      data: {
+        accommodations,
+      },
+    });
+  } catch (error: any) {
+    next(new AppError(error, BAD_REQUEST));
+  }
+};
+
+export {
+  getAccommodations,
+  createAccommodation,
+  getAccommodation,
+  searchSuggestions,
+};
