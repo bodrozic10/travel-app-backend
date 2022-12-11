@@ -20,6 +20,9 @@ export const USER_CREDENTIALS = {
 
 export const mockReqAndRes = () => ({
   mReq: {
+    query: {
+      name: "name",
+    },
     currentUser: {
       id: "id",
     },
