@@ -3,6 +3,7 @@ import { IAccomodation } from "../interface/accommodation";
 import {
   findAccommodations,
   createAccommodation as makeAccomodation,
+  findAccommodation,
 } from "../services/accommodation.service";
 import { BAD_REQUEST, CREATED, OK, SUCCESS } from "../const";
 import AppError from "../utils/AppError";
@@ -14,7 +15,7 @@ const getAccommodations = async (
 ) => {
   try {
     const data = await findAccommodations();
-    res.status(OK).json({
+    return res.status(OK).json({
       status: SUCCESS,
       length: data.length,
       data,
@@ -68,4 +69,22 @@ const createAccommodation = async (
   }
 };
 
-export { getAccommodations, createAccommodation };
+const getAccommodation = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const accommodation = await findAccommodation(req.params.id);
+    return res.status(OK).json({
+      status: SUCCESS,
+      data: {
+        accommodation,
+      },
+    });
+  } catch (error: any) {
+    return next(new AppError(error, BAD_REQUEST));
+  }
+};
+
+export { getAccommodations, createAccommodation, getAccommodation };

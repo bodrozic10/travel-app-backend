@@ -17,4 +17,14 @@ const createAccommodation = async (params: IAccomodation) => {
   }
 };
 
-export { findAccommodations, createAccommodation };
+const findAccommodation = async (id: string) => {
+  try {
+    return await Accommodation.findById(id)
+      .populate("host")
+      .populate("reviews");
+  } catch (error) {
+    throw error;
+  }
+};
+
+export { findAccommodations, createAccommodation, findAccommodation };
